@@ -180,6 +180,7 @@ All jobs: Redis-locked, retry-safe, idempotent.
 * Model portfolio state
 * Constraints + risk budget
 * News + ValYu context (if enabled)
+* Add one more with Iris as the master agent, hopefully this wins with all the context it has and better reasoning capabilities
 
 ### Output Schema (Strict)
 
