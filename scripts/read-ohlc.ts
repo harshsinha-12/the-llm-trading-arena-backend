@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
-import { OHLCDataPoint } from "./interface";
-import { getRedisClient } from "./redis";
+import { MBCode, OHLCDataPoint } from "../types/global";
+import { getRedisClient } from "../redis/personal";
 dotenv.config();
 
-async function main() {
+async function readOHLC(mbCode: MBCode) {
     const client = await getRedisClient();
     try {
-        const key = "ohlc:MBEQU5710:10Y";
+        const key = `ohlc:${mbCode}:1Y`;
         const raw = await client.get(key);
         if (!raw) {
             console.log("No OHLC data found. Run save-ohlc.ts first.");
@@ -20,4 +20,4 @@ async function main() {
     }
 }
 
-main().catch(console.error);
+readOHLC("MBEQU5710").catch(console.error);
