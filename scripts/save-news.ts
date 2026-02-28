@@ -3,10 +3,11 @@ import { getIndexConstituents } from '../fetchers/constituents'
 import { fetchNewsForStock } from '../fetchers/news'
 import { getRedisClient } from '../redis/personal'
 import { NIFTY_50_INDEX_CODE } from '../config/global'
+import { newsKey } from '../config/redis'
 import { getNameFromMBCode } from '../utils/codes'
 dotenv.config()
 
-async function saveNews() {
+export async function saveNews() {
     const mbCodes = await getIndexConstituents(NIFTY_50_INDEX_CODE)
     console.log(`Fetched ${mbCodes.length} Nifty 50 constituents`)
     const nameMap = await getNameFromMBCode(mbCodes)
@@ -20,7 +21,7 @@ async function saveNews() {
                     continue
                 }
                 const news = await fetchNewsForStock(mbCode, name)
-                const key = `news:${mbCode}`
+                const key = newsKey(mbCode)
                 await client.set(key, JSON.stringify(news))
                 console.log(`Saved ${news.length} news items → ${key} (${name})`)
             } catch (err) {
