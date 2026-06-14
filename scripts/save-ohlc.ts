@@ -14,21 +14,21 @@ export async function saveOHLC() {
     console.log(`Fetched ${mbCodes.length} Nifty 50 constituents`);
     const client = await getRedisClient();
     try {
-        for (const mbCode of mbCodes) {
-            for (const duration of DURATIONS) {
-                try {
-                    const ohlc = await getOHLC({ mbCode, duration });
-                    const key = ohlcKey(mbCode, duration);
-                    await client.set(key, JSON.stringify(ohlc));
-                    console.log(`Saved ${ohlc.length} records → ${key}`);
-                } catch (err) {
-                    console.error(`Failed ${mbCode} ${duration}:`, err);
-                }
-            }
-        }
+        await Promise.all(
+            mbCodes.flatMap((mbCode) =>
+                DURATIONS.map(async (duration) => {
+                    try {
+                        const ohlc = await getOHLC({ mbCode, duration });
+                        const key = ohlcKey(mbCode, duration);
+                        await client.set(key, JSON.stringify(ohlc));
+                        console.log(`Saved ${ohlc.length} records → ${key}`);
+                    } catch (err) {
+                        console.error(`Failed ${mbCode} ${duration}:`, err);
+                    }
+                })
+            )
+        );
     } finally {
         await client.quit();
     }
 }
-
-saveOHLC().catch(console.error);

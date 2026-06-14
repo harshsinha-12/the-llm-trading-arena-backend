@@ -11,9 +11,7 @@ export async function getRedisClient() {
             port: Number(process.env.REDIS_PORT),
         }
     });
-    client.connect();
+    await client.connect();
     console.log("Redis connected");
     return client;
 }
-
-getRedisClient()

@@ -9,6 +9,7 @@ dotenv.config()
 
 export async function saveNews() {
     const mbCodes = await getIndexConstituents(NIFTY_50_INDEX_CODE)
+    mbCodes.push('Y$Y')
     console.log(`Fetched ${mbCodes.length} Nifty 50 constituents`)
     const nameMap = await getNameFromMBCode(mbCodes)
     const client = await getRedisClient()
@@ -24,6 +25,7 @@ export async function saveNews() {
                 const key = newsKey(mbCode)
                 await client.set(key, JSON.stringify(news))
                 console.log(`Saved ${news.length} news items → ${key} (${name})`)
+                await new Promise(resolve => setTimeout(resolve, 1000))
             } catch (err) {
                 console.error(`Failed ${mbCode}:`, err)
             }
@@ -32,5 +34,3 @@ export async function saveNews() {
         await client.quit()
     }
 }
-
-saveNews().catch(console.error)

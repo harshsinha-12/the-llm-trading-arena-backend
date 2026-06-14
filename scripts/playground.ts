@@ -8,9 +8,13 @@ import { saveTechnicals } from "./save-techncials";
 
 async function main() {
     await saveConstituents();
+    console.log("Constituents saved");
     await saveOHLC();
-    await saveTechnicals();
+    console.log("OHLC saved");
     await saveNews();
+    console.log("News saved");
+    await saveTechnicals();
+    console.log("Technicals saved");
 }
 
 main().catch(console.error);

@@ -17,5 +17,3 @@ export async function saveConstituents() {
         await client.quit();
     }
 }
-
-saveConstituents().catch(console.error);
